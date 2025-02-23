@@ -7,6 +7,7 @@ const {Router} = require("express");
 const userRouter = Router();
 const {userModel} = require("../DB/DB");
 const jwt = require("jsonwebtoken");
+require('dotenv').config;
 const JWT_USER_PASSWORD = "aladirj443"
 
 
@@ -40,7 +41,7 @@ const user = await userModel.findOne({  //it is returning user or undefine but f
 if (user) {
    const token =  jwt.sign({
         id:user._id
-    },JWT_USER_PASSWORD)
+    },process.env.JWT_USER_PASSWORD)
     
 // Do cookies based authentication if needed
 

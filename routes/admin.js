@@ -1,10 +1,15 @@
 const {Router} = require('express')
 const adminRouter = Router();
-const {adminModel} = require("../DB/DB")
+const {adminModel, courseModel} = require("../DB/DB")
 const jwt = require("jsonwebtoken")
+require('dotenv').config();
+const {adminMiddleware} = require('../middleware/admin')
 //bcrypt, zod
 
-const JWT_ADMIN_ASSWORD = "dfhjg463769jsdgh";
+
+
+app.use(express.json());
+
 
 adminRouter.post('/signup', async function(req,res){
     const {email, password, firstName, lastName} = req.body; //TODO: adding ZOD validation
@@ -36,7 +41,7 @@ const admin = await adminModel.findOne({  //it is returning user or undefine but
 if (admin) {
    const token =  jwt.sign({
         id:admin._id
-    },JWT_ADMIN_ASSWORD)
+    },process.env.JWT_ADMIN_PASSWORD)
     
 // Do cookies based authentication if needed
 
@@ -51,8 +56,18 @@ if (admin) {
 })
 
 
-adminRouter.post('/course',function(req,res){
-    
+adminRouter.post('/course', adminMiddleware, async function(req,res){
+    const admin = req.userId;
+    const {title , description, imageUrl, price} = req.body;
+
+   const course = await courseModel.create({
+        title , description, imageUrl, price, creatorId
+    })
+
+    res.json({
+        message: "Course Created",
+        courseId: course._id
+    })
 })
 
 adminRouter.put('/course',function(req,res){
