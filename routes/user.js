@@ -5,10 +5,10 @@
 
 const {Router} = require("express");
 const userRouter = Router();
-const {userModel} = require("../DB/DB");
+const {userModel, purchaseModel} = require("../DB/DB");
 const jwt = require("jsonwebtoken");
 require('dotenv').config;
-const JWT_USER_PASSWORD = "aladirj443"
+
 
 
 userRouter.post('/signUp' , async  (req, res) => {
@@ -28,6 +28,8 @@ userRouter.post('/signUp' , async  (req, res) => {
 
     res.send("signUp")
 })
+
+
 
 userRouter.post('/signin' , async (req,res)=>{
 const {email , password} = req.body;
@@ -55,8 +57,18 @@ if (user) {
 }
 })
 
-userRouter.get('/purchase' , (req,res)=>{
-    res.send("purchase")
+
+
+userRouter.get('/purchase' ,userMiddleware, async (req,res)=>{
+    const userId = req.userId;
+    
+    const purchase = await purchaseModel.find({
+        userId
+    })
+
+    res.json({
+        purchase
+    })
 })
 
 module.exports = {userRouter};
