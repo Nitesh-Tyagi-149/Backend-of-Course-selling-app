@@ -29,6 +29,7 @@ adminRouter.post('/signup', async function(req,res){
     res.send("signUp")
 })
 
+
 adminRouter.post('/signin', async function(req,res){
     const {email , password} = req.body;
 
@@ -70,6 +71,7 @@ adminRouter.post('/course', adminMiddleware, async function(req,res){
     })
 })
 
+
 adminRouter.put('/course',adminMiddleware, async function(req,res){
     const adminId = req.userId;
 
@@ -88,6 +90,7 @@ adminRouter.put('/course',adminMiddleware, async function(req,res){
     })
     
 })
+
 
 adminRouter.get('/course/bulk',adminMiddleware, async function(req,res){
     const adminId = req.userId;
